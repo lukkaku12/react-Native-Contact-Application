@@ -1,117 +1,123 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
+  FlatList,
   View,
+  StyleSheet,
+  StatusBar,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+import {RouteProp} from '@react-navigation/native';
+import ContactPage from './src/screens/ContactPage';
+import HomeScreen from './src/screens/HomeScreen';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ContactScreen from './src/screens/ContactScreen';
+import CreateContact from './src/screens/CreateContact';
+//AIzaSyDySbqAj1FvZwhUQQbHsGL2aRtBm9Xhmic maps API
+// Definir el tipo del Stack
+export type RootStackParamList = {
+  Home: undefined;
+  HomeTab: undefined;
+  Details: {item: {id: string; firstName: string; lastName: string; phoneNumber: string}};
+  newContact: undefined;
+  config: {
+    item: {
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+    };
   };
+};
 
+// Stack Navigator
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootStackParamList>();
+
+const StackNavigator = () => {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Details" component={ContactScreen} />
+      <Stack.Screen
+        name="newContact"
+        options={{headerTitle: 'Create contact', headerBlurEffect: 'dark'}}
+        component={CreateContact}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    </Stack.Navigator>
   );
-}
+};
+// el tabNavigator se usa para poder tener un mini menu abajo de tu app, junto con el stack, que es donde estaran todas las vistas de tu aplicac
+const TabNavigator = () => (
+  <Tab.Navigator
+    screenOptions={() => ({
+      tabBarActiveTintColor: 'blue',
+      tabBarInactiveTintColor: 'gray',
+    })}>
+    <Tab.Screen
+      name="HomeTab"
+      component={StackNavigator}
+      options={{
+        headerShown: false,
+        tabBarLabel: 'Home',
+        tabBarIcon: ({color, size}) => (
+          <MaterialCommunityIcons name="home" color={color} size={size} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="config"
+      component={ContactPage}
+      options={{
+        headerShown: false,
+        tabBarLabel: 'Profile',
+        tabBarIcon: ({color, size}) => (
+          <MaterialCommunityIcons name="account" color={color} size={size} />
+        ),
+      }}
+      initialParams={{
+        item: {firstName: 'John', lastName: 'Doe', phoneNumber: '123-456-7890'},
+      }}
+    />
+  </Tab.Navigator>
+  //options sirve para poder quitar el encabezado arriba en la app del name que pones
+);
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
+  );
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    padding: 10,
+    marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: '#f0f0f0',
   },
-  sectionTitle: {
+  header: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  sectionDescription: {
-    marginTop: 8,
+  item: {
+    backgroundColor: '#aaaacc',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 5,
+  },
+  title: {
     fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 });
 
