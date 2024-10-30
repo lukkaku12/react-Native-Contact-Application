@@ -1,4 +1,4 @@
-import { Text, StyleSheet, StatusBar, View, TextInput, Button } from 'react-native';
+import { Text, StyleSheet, StatusBar, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -93,6 +93,10 @@ const ContactScreen = ({ route }: { route: DetailsScreenRouteProp }) => {
         onPress={() => handleDeleteContact(item.phoneNumber)}
         style={{ alignSelf: 'flex-end', marginTop: 10 }}
       />
+      <TouchableOpacity
+      onPress={() => {navigation.navigate('mapOptions', {item})}}>
+        <Text style={{ color: 'blue', fontWeight: 'bold' }}>go to maps</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

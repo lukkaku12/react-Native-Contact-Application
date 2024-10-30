@@ -2,29 +2,24 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import {
-  SafeAreaView,
-  Text,
-  FlatList,
-  View,
   StyleSheet,
   StatusBar,
 } from 'react-native';
-import {RouteProp} from '@react-navigation/native';
 import ContactPage from './src/screens/ContactPage';
 import HomeScreen from './src/screens/HomeScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ContactScreen from './src/screens/ContactScreen';
 import CreateContact from './src/screens/CreateContact';
-//AIzaSyDySbqAj1FvZwhUQQbHsGL2aRtBm9Xhmic maps API
+import MapsScreen from './src/screens/MapsScreen';
 // Definir el tipo del Stack
 export type RootStackParamList = {
   Home: undefined;
   HomeTab: undefined;
-  Details: {item: {id: string; firstName: string; lastName: string; phoneNumber: string}};
+  Details: {item: {id: string; firstName: string; lastName: string; phoneNumber: string;}};
+  mapOptions: {item: {id: string; firstName: string; lastName: string; phoneNumber: string;}};
   newContact: undefined;
   config: {
     item: {
@@ -48,6 +43,11 @@ const StackNavigator = () => {
         name="newContact"
         options={{headerTitle: 'Create contact', headerBlurEffect: 'dark'}}
         component={CreateContact}
+      />
+      <Stack.Screen
+        name="mapOptions"
+        options={{headerTitle: 'Maps', headerBlurEffect: 'dark'}}
+        component={MapsScreen}
       />
     </Stack.Navigator>
   );
