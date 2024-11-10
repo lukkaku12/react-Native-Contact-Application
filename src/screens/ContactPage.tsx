@@ -16,26 +16,24 @@ import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {
   launchCamera,
   launchImageLibrary,
-  Asset,
 } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type ContactPageRouteProp = RouteProp<RootStackParamList, 'config'>; // Asegúrate de usar el nombre correcto aquí
+type ContactPageRouteProp = RouteProp<RootStackParamList, 'config'>; 
 
 type ContactPageProps = {
-    route: ContactPageRouteProp;
-  };
+  route: ContactPageRouteProp;
+};
 
-const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
+const ContactPage: React.FC<ContactPageProps> = ({route}) => {
   const {item} = route.params;
 
-  // Aquí debes definir el hook useState dentro de tu componente
+  
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
-
-  // Función para abrir la cámara
+  
   const openCamera = () => {
     const options = {
       mediaType: 'photo',
@@ -51,7 +49,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
         const uri = response.assets[0].uri;
         if (uri) {
           setImageUri(uri);
-          AsyncStorage.setItem('imageUser', uri)
+          AsyncStorage.setItem('imageUser', uri);
         }
       }
     });
@@ -66,9 +64,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
     } catch (e) {
       console.error('Error reading data from AsyncStorage', e);
     }
-  }
+  };
 
-  // Función para abrir la galería
+  
   const openGallery = () => {
     const options = {
       mediaType: 'photo',
@@ -82,21 +80,20 @@ const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
       } else if (response.assets && response.assets.length > 0) {
         const uri = response.assets[0].uri;
         if (uri) {
-          setImageUri(uri); // Asegúrate de que uri no es undefined
+          setImageUri(uri); 
         }
       }
     });
   };
 
   useEffect(() => {
-
     const funcionPrueba = async () => {
-     await getPhoto();
-    }
+      await getPhoto();
+    };
     if (isFocused) {
-    funcionPrueba();
+      funcionPrueba();
     }
-  }, [isFocused])
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -112,7 +109,10 @@ const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
               size={30}
               color="black"
               style={styles.closeIcon}
-              onPress={() => {setModalVisible(false)}}/>
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            />
             <View style={styles.modalView}>
               <Button title="Open Camera" onPress={openCamera} />
               <Button title="Open Gallery" onPress={openGallery} />
@@ -144,53 +144,27 @@ const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
         </TouchableWithoutFeedback>
         <Text style={styles.profileTitle}>Profile</Text>
         <TextInput style={styles.name}>
-          {item.firstName} {item.lastName}
+          {item.name} {item.last_name}
         </TextInput>
-        <TextInput style={styles.phone}>Phone: {item.phoneNumber}</TextInput>
+        <TextInput style={styles.phone}>Phone: {item.phone_number}</TextInput>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  // Container styles
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
+
+  // Profile section styles
   profileContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 50,
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-  },
-  icon: {
-    marginTop: 50,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center', // Centra el contenido verticalmente
-    alignItems: 'center', // Centra el contenido horizontalmente
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente
-  },
-  modalView: {
-    backgroundColor: 'white', // Fondo blanco para el contenido
-    borderRadius: 10, // Esquinas redondeadas
-    padding: 20, // Espacio interno alrededor del contenido
-    alignItems: 'center', // Alinea los elementos en el centro
-  },
-  button: {
-    marginVertical: 10, // Espacio entre los botones
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   profileTitle: {
     fontSize: 24,
@@ -209,6 +183,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     alignSelf: 'center',
+  },
+
+  // Icon styles
+  icon: {
+    marginTop: 50,
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+  },
+
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  button: {
+    marginVertical: 10,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

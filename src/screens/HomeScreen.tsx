@@ -6,20 +6,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParamList } from "../../App";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 
 const getData = async () => {
   try {
-    const value = await AsyncStorage.getItem('contacts');
-    return value ? JSON.parse(value) : [];
+    const response = await axios.get('http://192.168.1.5:3000/contact');
+
+    const contactsFromAPI = response.data; 
+    
+    // const value = await AsyncStorage.getItem('contacts');
+    // console.log(value);
+    // return value ? JSON.parse(value) : [];
+    
+    return response ? contactsFromAPI : [] ;
   } catch (e) {
-    console.error('Error reading data from AsyncStorage', e);
+    console.error('Error reading data from database', e);
     return [];
   }
 };
 
 const sortContactsByLetter = (contacts: any) => {
     return contacts.reduce((groups: any, contact: any) => {
-        const firstLetter = contact.firstName[0].toUpperCase();
+        const firstLetter = contact.name[0].toUpperCase();
         const foundGroup = groups.find((group: any) => group.letter === firstLetter)
 
         if (foundGroup) {
@@ -39,7 +47,8 @@ const HomeScreen = ({ navigation }: { navigation: HomeScreenNavigationProp }) =>
 
   const fetchContacts = async () => {
     const storedContacts = await getData();
-    const contactsSorted = storedContacts.sort((a: any, b: any) => a.firstName.localeCompare(b.firstName));
+
+    const contactsSorted = storedContacts.sort((a: any, b: any) => a.name.localeCompare(b.name));
     const groupedContacts = sortContactsByLetter(contactsSorted);
     setContacts(groupedContacts);
   };
@@ -50,6 +59,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeScreenNavigationProp }) =>
     if (isFocused) fetchContacts();
   }, [isFocused]);
 
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -79,14 +89,14 @@ const HomeScreen = ({ navigation }: { navigation: HomeScreenNavigationProp }) =>
 
         <SectionList
   sections={contacts}  // Array de secciones
-  keyExtractor={(item) => item.firstName + item.lastName}  // Clave única para cada contacto
+  keyExtractor={(item) => item.name + item.last_name} 
   renderItem={({ item }) => (
     <View style={styles.item}>
            <Text
              style={styles.title}
              onPress={() => navigation.navigate("Details", { item })}
            >
-             {item.firstName} {item.lastName}
+             {item.name} {item.last_name}
            </Text>
          </View>
   )}

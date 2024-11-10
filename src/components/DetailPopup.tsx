@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 
 const DetailPopup = ({ weatherData, onRoutePress }:{ weatherData: any, onRoutePress: any }) => {
   if (!weatherData) return null;
