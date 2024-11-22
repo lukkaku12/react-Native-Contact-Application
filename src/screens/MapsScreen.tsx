@@ -4,9 +4,9 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../App';
 import { OPENWEATHER_API_KEY } from '@env';
 import DetailPopup from '../components/DetailPopup';
+import { RootStackParamList } from '../types/navigation.types';
 
 type MapsScreenProp = RouteProp<RootStackParamList, 'mapOptions'>;
 
@@ -79,8 +79,8 @@ const MapsScreen = ({ route }: { route: MapsScreenProp }) => {
       try {
         // Ejecutamos ambas peticiones en paralelo para reducir el tiempo de espera
         const [storedLatitude, storedLongitude] = await Promise.all([
-          axios.get(`http://192.168.1.5:3000/latitude/contact/${item.id}`),
-          axios.get(`http://192.168.1.5:3000/longitude/contact/${item.id}`)
+          axios.get(`http://192.168.89.189:3000/latitude/contact/${item.id}`),
+          axios.get(`http://192.168.89.189:3000/longitude/contact/${item.id}`)
         ]);
   
         // Verifica si ambas coordenadas existen y son válidas antes de setear el marcador
@@ -115,6 +115,7 @@ const MapsScreen = ({ route }: { route: MapsScreenProp }) => {
           const response = await axios.get(
             `https://api.openweathermap.org/data/2.5/weather?lat=${marker.latitude}&lon=${marker.longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`
           );
+          console.log(OPENWEATHER_API_KEY)
           
           setWeatherData(response.data);
         } catch (err) {

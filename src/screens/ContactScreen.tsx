@@ -9,7 +9,7 @@ import {
 import React, {useState} from 'react';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {RootStackParamList} from '../../App';
+import { RootStackParamList } from '../types/navigation.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -54,9 +54,14 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
 
 
     try {
+      const token = await AsyncStorage.getItem('token');
       const response = await axios.patch(
-        `http://192.168.1.5:3000/contact/${item.id}`, 
-        { name:firstName, last_name:lastName, phone_number:phoneNumber }
+        `http://192.168.1.9:3000/contact/${item.id}`, 
+        { name:firstName, last_name:lastName, phone_number:phoneNumber }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log('Contact updated successfully', response.data);
       navigation.goBack();
@@ -87,7 +92,8 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
     // }
 
     try {
-      const response = await axios.delete(`http://192.168.1.5:3000/contact?id=${id}`);
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.delete(`http://192.168.1.9:3000/contact?id=${id}`, {headers:{Authorization:`Bearer ${token}`}});
       console.log('Contact deleted successfully', response.data);
       navigation.goBack();
     } catch (error) {

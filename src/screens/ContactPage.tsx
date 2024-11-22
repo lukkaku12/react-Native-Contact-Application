@@ -7,33 +7,39 @@ import {
   Image,
   Button,
   Modal,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {RootStackParamList} from '../../App';
-import {RouteProp, useIsFocused} from '@react-navigation/native';
+import { RootStackParamList } from '../types/navigation.types';
+import { RouteProp, useIsFocused, useNavigation } from '@react-navigation/native';
 import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type ContactPageRouteProp = RouteProp<RootStackParamList, 'config'>; 
+
+type ContactPageRouteProp = RouteProp<RootStackParamList, 'config'>;
 
 type ContactPageProps = {
   route: ContactPageRouteProp;
 };
 
-const ContactPage: React.FC<ContactPageProps> = ({route}) => {
-  const {item} = route.params;
+const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
+  const { item } = route.params;
 
-  
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [name, setName] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string | number>('');
   const isFocused = useIsFocused();
+  const navigation = useNavigation<RootStackParamList>();
 
-  
   const openCamera = () => {
     const options = {
       mediaType: 'photo',
@@ -66,7 +72,6 @@ const ContactPage: React.FC<ContactPageProps> = ({route}) => {
     }
   };
 
-  
   const openGallery = () => {
     const options = {
       mediaType: 'photo',
@@ -80,7 +85,7 @@ const ContactPage: React.FC<ContactPageProps> = ({route}) => {
       } else if (response.assets && response.assets.length > 0) {
         const uri = response.assets[0].uri;
         if (uri) {
-          setImageUri(uri); 
+          setImageUri(uri);
         }
       }
     });
@@ -94,6 +99,36 @@ const ContactPage: React.FC<ContactPageProps> = ({route}) => {
       funcionPrueba();
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const email = await AsyncStorage.getItem('emailUser');
+      const response = await axios.get(`http://192.168.1.9:3000/users?email=${email}`);
+      setName(response.data.name);
+      setPhoneNumber(response.data.phoneNumber);
+    };
+
+    getData();
+  }, [isFocused]);
+
+
+
+
+  // Función de logout
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.setItem('isLoggedIn', 'false');
+      await AsyncStorage.removeItem('emailUser');
+      await AsyncStorage.removeItem('token');
+      Alert.alert('Logout', 'Has cerrado sesión correctamente');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'RegisterLogin'}],
+      });
+    } catch (error) {
+      console.log('Error al cerrar sesión', error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,6 +154,12 @@ const ContactPage: React.FC<ContactPageProps> = ({route}) => {
             </View>
           </View>
         </Modal>
+
+        {/* Logo de Logout */}
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Ionicons name="log-out" size={30} color="black" />
+        </TouchableOpacity>
+
         <TouchableWithoutFeedback>
           {imageUri ? (
             <TouchableWithoutFeedback
@@ -126,8 +167,8 @@ const ContactPage: React.FC<ContactPageProps> = ({route}) => {
                 setModalVisible(true);
               }}>
               <Image
-                source={{uri: imageUri}}
-                style={{width: 170, height: 170, borderRadius: 100}}
+                source={{ uri: imageUri }}
+                style={{ width: 170, height: 170, borderRadius: 100 }}
               />
             </TouchableWithoutFeedback>
           ) : (
@@ -143,23 +184,18 @@ const ContactPage: React.FC<ContactPageProps> = ({route}) => {
           )}
         </TouchableWithoutFeedback>
         <Text style={styles.profileTitle}>Profile</Text>
-        <TextInput style={styles.name}>
-          {item.name} {item.last_name}
-        </TextInput>
-        <TextInput style={styles.phone}>Phone: {item.phone_number}</TextInput>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.phone}>Phone: {phoneNumber}</Text>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  // Container styles
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-
-  // Profile section styles
   profileContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -184,8 +220,6 @@ const styles = StyleSheet.create({
     color: 'black',
     alignSelf: 'center',
   },
-
-  // Icon styles
   icon: {
     marginTop: 50,
   },
@@ -194,8 +228,6 @@ const styles = StyleSheet.create({
     top: 20,
     right: 20,
   },
-
-  // Modal styles
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -216,6 +248,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
   },
 });
 

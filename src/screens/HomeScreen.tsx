@@ -3,16 +3,33 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, SectionList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from '../types/navigation.types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useIsFocused } from "@react-navigation/native";
 import axios from "axios";
 
 const getData = async () => {
   try {
-    const response = await axios.get('http://192.168.1.5:3000/contact');
+    const token = await AsyncStorage.getItem('token'); // Reemplaza con tu token real
+    const email = await AsyncStorage.getItem('emailUser');
+    // AsyncStorage.clear()
 
+    const responseEmail = await axios.get(`http://192.168.89.120:3000/users?email=${email}`);
+    
+
+    if (!token) {
+      throw new Error('error with getting token')
+    }
+    
+    const response = await axios.get(`http://192.168.89.120:3000/contact?user=${responseEmail.data.id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+
+      },
+    });
+    AsyncStorage.setItem('idOfUser', String(responseEmail.data.id));
     const contactsFromAPI = response.data; 
+    
     
     // const value = await AsyncStorage.getItem('contacts');
     // console.log(value);
@@ -20,7 +37,7 @@ const getData = async () => {
     
     return response ? contactsFromAPI : [] ;
   } catch (e) {
-    console.error('Error reading data from database', e);
+    console.error('Error reading data from database contact', e);
     return [];
   }
 };

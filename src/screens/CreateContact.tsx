@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../types/navigation.types';
 
 type CreateContactScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -16,9 +16,20 @@ const storeData = async (newContact: {
   last_name: string;
   phone_number: string;
   picture_uri: string;
+  user_id: number;
 }) => {
   try {
-    const response = await axios.post('http://192.168.1.5:3000/contact', newContact);
+    
+    const token = await AsyncStorage.getItem('token'); // Reemplaza con tu token real
+    const response = await axios.post(
+      'http://192.168.89.189:3000/contact',
+      newContact, // Este es el cuerpo de la solicitud (los datos que se envían)
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Este es el encabezado de autenticación
+        },
+      }
+    );
     console.log('Contact saved successfully', response.data);
   } catch (e) {
     console.error('Error saving data:', e);
@@ -32,13 +43,19 @@ const CreateContact = () => {
   const navigation = useNavigation<CreateContactScreenNavigationProp>();
 
   const handleSaveContact = async () => {
+    const idUser = await AsyncStorage.getItem('idOfUser')
+    
+    if (!idUser) {
+      console.log('Error', 'No se ha encontrado el usuario');
+      return;
+    }
     const newContact = {
       name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
       picture_uri: 'asda', // O puedes dejarlo vacío si no es obligatorio
+      user_id: parseInt(idUser), // Este es el id del usuario al que pertenece el contacto (reemplaza con tu id real)
     };
-    console.log(newContact, firstName, 'hooooasdsa');
     
 
     await storeData(newContact);
