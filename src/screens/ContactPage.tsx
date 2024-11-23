@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Image,
   Button,
@@ -13,25 +12,29 @@ import {
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { RootStackParamList, TabNavigatorTypes } from '../types/navigation.types';
-import { RouteProp, useIsFocused, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../types/navigation.types';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
-
-
+type ContactScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Config'
+>;
 const ContactPage = () => {
-
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string | number>('');
   const isFocused = useIsFocused();
-  const navigation = useNavigation<RootStackParamList>();
+  const navigation = useNavigation<ContactScreenNavigationProp>();
+  const { setIsAuthenticated } = useAuth(); 
 
   const openCamera = () => {
     const options = {
@@ -79,6 +82,7 @@ const ContactPage = () => {
         const uri = response.assets[0].uri;
         if (uri) {
           setImageUri(uri);
+          AsyncStorage.setItem('imageUser', uri);
         }
       }
     });
@@ -102,9 +106,48 @@ const ContactPage = () => {
     };
 
     getData();
+    getProfilePicture()
   }, [isFocused]);
 
+  // Función para obtener la imagen de perfil
+  const getProfilePicture = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('idOfUser')
+      const response = await axios.get(
+        `https://react-native-backend-production.up.railway.app/profile-picture/${userId}`
+      );
+      setImageUri(response.data.profile_picture_uri); // Suponiendo que la respuesta contiene la URL de la imagen
+    } catch (error) {
+      console.error('Error fetching profile picture:', error);
+    }
+  };
 
+  // Función para subir la imagen de perfil
+  const uploadProfilePicture = async ( imageUri: string) => {
+    const formData = new FormData();
+    formData.append('file', {
+      uri: imageUri,
+      type: 'image/jpeg', // Cambiar según el tipo de archivo
+      name: 'profile_picture.jpg',
+    });
+
+    try {
+      const userId = await AsyncStorage.getItem('idOfUser')
+      const response = await axios.post(
+        `https://react-native-backend-production.up.railway.app/profile-picture/upload/${userId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      Alert.alert('Success', 'Profile picture uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
+      Alert.alert('Error', 'Failed to upload profile picture');
+    }
+  };
 
 
   // Función de logout
@@ -114,10 +157,8 @@ const ContactPage = () => {
       await AsyncStorage.removeItem('emailUser');
       await AsyncStorage.removeItem('token');
       Alert.alert('Logout', 'Has cerrado sesión correctamente');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'RegisterLogin'}],
-      });
+      setIsAuthenticated(false);
+      navigation.navigate('RegisterLogin')
     } catch (error) {
       console.log('Error al cerrar sesión', error);
     }

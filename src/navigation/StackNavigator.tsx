@@ -12,8 +12,10 @@ import OnBoarding from '../components/OnBoarding';
 import LogInRegisterView from '../screens/LogInRegisterView';
 import ContactPage from '../screens/ContactPage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RootStackParamList } from '../types/navigation.types';
+import { AuthProvider, useAuth } from '../context/AuthContext';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => (
@@ -24,7 +26,7 @@ const TabNavigator = () => (
     }}
   >
     <Tab.Screen
-      name="HomeTab"
+      name="HomeTab" // Consistente con el Stack.Navigator
       component={HomeScreen}
       options={{
         headerShown: false,
@@ -50,7 +52,7 @@ const TabNavigator = () => (
 
 export const StackNavigator = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     const checkAsyncStorage = async () => {
@@ -58,8 +60,8 @@ export const StackNavigator = () => {
         const firstLaunch = await AsyncStorage.getItem('onBoardingComplete');
         const authenticated = await AsyncStorage.getItem('isLoggedIn');
 
-        setIsFirstLaunch(firstLaunch === null ? true : false); // Si es la primera vez, lo marcará como `true`
-        setIsAuthenticated(authenticated === 'true'); // Verifica si el usuario está autenticado
+        setIsFirstLaunch(firstLaunch === null ? true : false);
+        setIsAuthenticated(authenticated === 'true');
       } catch (error) {
         console.error('Error checking AsyncStorage', error);
       }
@@ -69,16 +71,17 @@ export const StackNavigator = () => {
   }, []);
 
   if (isFirstLaunch === null) {
-    // Asegúrate de que AsyncStorage haya sido cargado antes de navegar
-    return null; // Puedes devolver un loading spinner mientras verificas AsyncStorage
+    return null;
   }
 
   return (
+    
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
           isAuthenticated ? 'Home' : isFirstLaunch ? 'Onboarding' : 'RegisterLogin'
-        }>
+        }
+      >
         {isFirstLaunch && !isAuthenticated && (
           <Stack.Screen
             name="Onboarding"
@@ -123,6 +126,5 @@ export const StackNavigator = () => {
     </NavigationContainer>
   );
 };
-
 
 export default StackNavigator;

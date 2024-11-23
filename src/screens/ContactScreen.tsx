@@ -11,12 +11,12 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { RootStackParamList } from '../types/navigation.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 type DetailsScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
-type ContactDetailsNavigationProp = NativeStackNavigationProp<
+type ContactDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Details'
 >;

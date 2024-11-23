@@ -2,11 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { RootStackParamList } from '../types/navigation.types';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-type CreateContactScreenNavigationProp = NativeStackNavigationProp<
+type CreateContactScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'NewContact'
 >;

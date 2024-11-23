@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import LoginForm from '../components/loginForm';
 import RegisterForm from '../components/registerForm';
 import { RootStackParamList } from '../types/navigation.types';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-type LogInRegisterViewNavigationProp = NativeStackNavigationProp<RootStackParamList, 'RegisterLogin'>;
+type LogInRegisterViewNavigationProp = StackNavigationProp<RootStackParamList, 'RegisterLogin'>;
 
 type LogInRegisterViewProps = {
   navigation: LogInRegisterViewNavigationProp;

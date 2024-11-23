@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
   StyleSheet,
 } from 'react-native';
 import {RootStackParamList} from '../types/navigation.types';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAuth } from '../context/AuthContext';
 
-type RegisterLoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'RegisterLogin'>;
+type RegisterLoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'RegisterLogin'>;
 
 
 const LoginForm = ({ navigation }: { navigation: RegisterLoginScreenNavigationProp }) => {
@@ -26,6 +26,7 @@ const LoginForm = ({ navigation }: { navigation: RegisterLoginScreenNavigationPr
     email: false,
     password: false,
   });
+  const { setIsAuthenticated } = useAuth(); 
 
   const handleFocus = (inputName: keyof typeof inputStates) => {
     setInputStates(prev => ({
@@ -40,6 +41,7 @@ const LoginForm = ({ navigation }: { navigation: RegisterLoginScreenNavigationPr
       [inputName]: false,
     }));
   };
+
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -61,10 +63,8 @@ const LoginForm = ({ navigation }: { navigation: RegisterLoginScreenNavigationPr
         await AsyncStorage.setItem('isLoggedIn', 'true');
         await AsyncStorage.setItem('emailUser', email);
         await AsyncStorage.setItem('token', response.data.message);
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        });
+        setIsAuthenticated(true);
+        navigation.navigate('Home')
       }
     } catch (error) {
       Alert.alert('Error', 'Correo o contraseña incorrectos');

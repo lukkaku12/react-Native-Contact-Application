@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {StackNavigationProp} from '@react-navigation/stack';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, SectionList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -56,7 +56,7 @@ const sortContactsByLetter = (contacts: any) => {
     }, [])
 }
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 const HomeScreen = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
   const [contacts, setContacts] = useState<any[]>([]);
