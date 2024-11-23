@@ -44,7 +44,7 @@ const RegisterForm = () => {
       return;
     }
     try {
-      const response = await axios.post('http://192.168.89.189:3000/users', {
+      const response = await axios.post('https://react-native-backend-production.up.railway.app/users', {
         name,
         email,
         password,

@@ -96,7 +96,7 @@ const ContactPage = () => {
   useEffect(() => {
     const getData = async () => {
       const email = await AsyncStorage.getItem('emailUser');
-      const response = await axios.get(`http://192.168.89.120:3000/users?email=${email}`);
+      const response = await axios.get(`https://react-native-backend-production.up.railway.app/users?email=${email}`);
       setName(response.data.name);
       setPhoneNumber(response.data.phoneNumber);
     };

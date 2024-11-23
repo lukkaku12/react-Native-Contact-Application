@@ -31,8 +31,8 @@ const MapsScreen = ({ route }: { route: MapsScreenProp }) => {
       try {
         // Intentamos obtener las coordenadas existentes
         const [responseLatitude, responseLongitude] = await Promise.allSettled([
-          axios.get(`http://192.168.1.5:3000/latitude/${item.id}`),
-          axios.get(`http://192.168.1.5:3000/longitude/${item.id}`)
+          axios.get(`https://react-native-backend-production.up.railway.app/latitude/${item.id}`),
+          axios.get(`https://react-native-backend-production.up.railway.app/longitude/${item.id}`)
         ]);
   
         const existingLatitude = responseLatitude.status === 'fulfilled' ? responseLatitude.value.data.latitude : null;
@@ -41,11 +41,11 @@ const MapsScreen = ({ route }: { route: MapsScreenProp }) => {
         // Si las coordenadas no existen, las creamos
         if (!existingLatitude || !existingLongitude) {
           await Promise.all([
-            axios.post(`http://192.168.1.5:3000/latitude/`, {
+            axios.post(`https://react-native-backend-production.up.railway.app/latitude/`, {
               latitude: newMarker.latitude,
               contact_id: item.id
             }),
-            axios.post(`http://192.168.1.5:3000/longitude/`, {
+            axios.post(`https://react-native-backend-production.up.railway.app/longitude/`, {
               longitude: newMarker.longitude,
               contact_id: item.id
             })
@@ -55,10 +55,10 @@ const MapsScreen = ({ route }: { route: MapsScreenProp }) => {
         // Si existen pero son diferentes, las actualizamos
         else if (existingLatitude !== newMarker.latitude || existingLongitude !== newMarker.longitude) {
           await Promise.all([
-            axios.put(`http://192.168.1.5:3000/latitude?id=${item.id}`, {
+            axios.put(`https://react-native-backend-production.up.railway.app/latitude?id=${item.id}`, {
               latitude: newMarker.latitude
             }),
-            axios.put(`http://192.168.1.5:3000/longitude?id=${item.id}`, {
+            axios.put(`https://react-native-backend-production.up.railway.app/longitude?id=${item.id}`, {
               longitude: newMarker.longitude
             })
           ]);
@@ -79,8 +79,8 @@ const MapsScreen = ({ route }: { route: MapsScreenProp }) => {
       try {
         // Ejecutamos ambas peticiones en paralelo para reducir el tiempo de espera
         const [storedLatitude, storedLongitude] = await Promise.all([
-          axios.get(`http://192.168.89.189:3000/latitude/contact/${item.id}`),
-          axios.get(`http://192.168.89.189:3000/longitude/contact/${item.id}`)
+          axios.get(`https://react-native-backend-production.up.railway.app/latitude/contact/${item.id}`),
+          axios.get(`https://react-native-backend-production.up.railway.app/longitude/contact/${item.id}`)
         ]);
   
         // Verifica si ambas coordenadas existen y son válidas antes de setear el marcador

@@ -56,7 +56,7 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
     try {
       const token = await AsyncStorage.getItem('token');
       const response = await axios.patch(
-        `http://192.168.89.120:3000/contact/${item.id}`, 
+        `https://react-native-backend-production.up.railway.app/contact/${item.id}`, 
         { name:firstName, last_name:lastName, phone_number:phoneNumber }, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
 
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await axios.delete(`http://192.168.89.120:3000/contact?id=${id}`, {headers:{Authorization:`Bearer ${token}`}});
+      const response = await axios.delete(`https://react-native-backend-production.up.railway.app/contact?id=${id}`, {headers:{Authorization:`Bearer ${token}`}});
       console.log('Contact deleted successfully', response.data);
       navigation.goBack();
     } catch (error) {

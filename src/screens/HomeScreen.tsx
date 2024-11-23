@@ -14,14 +14,14 @@ const getData = async () => {
     const email = await AsyncStorage.getItem('emailUser');
     // AsyncStorage.clear()
 
-    const responseEmail = await axios.get(`http://192.168.89.120:3000/users?email=${email}`);
+    const responseEmail = await axios.get(`https://react-native-backend-production.up.railway.app/users?email=${email}`);
     
 
     if (!token) {
       throw new Error('error with getting token')
     }
     
-    const response = await axios.get(`http://192.168.89.120:3000/contact?user=${responseEmail.data.id}`, {
+    const response = await axios.get(`https://react-native-backend-production.up.railway.app/contact?user=${responseEmail.data.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
 

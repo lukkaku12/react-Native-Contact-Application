@@ -22,7 +22,7 @@ const storeData = async (newContact: {
     
     const token = await AsyncStorage.getItem('token'); // Reemplaza con tu token real
     const response = await axios.post(
-      'http://192.168.89.120:3000/contact',
+      'https://react-native-backend-production.up.railway.app/contact',
       newContact, // Este es el cuerpo de la solicitud (los datos que se envían)
       {
         headers: {

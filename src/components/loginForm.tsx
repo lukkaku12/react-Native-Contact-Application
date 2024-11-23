@@ -49,7 +49,7 @@ const LoginForm = ({ navigation }: { navigation: RegisterLoginScreenNavigationPr
 
     try {
       const response = await axios.post(
-        'http://192.168.89.120:3000/auth/login',
+        'https://react-native-backend-production.up.railway.app/auth/login',
         {
           email,
           password,
