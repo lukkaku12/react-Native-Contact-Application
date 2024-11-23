@@ -56,7 +56,7 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
     try {
       const token = await AsyncStorage.getItem('token');
       const response = await axios.patch(
-        `http://192.168.1.9:3000/contact/${item.id}`, 
+        `http://192.168.89.120:3000/contact/${item.id}`, 
         { name:firstName, last_name:lastName, phone_number:phoneNumber }, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
 
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await axios.delete(`http://192.168.1.9:3000/contact?id=${id}`, {headers:{Authorization:`Bearer ${token}`}});
+      const response = await axios.delete(`http://192.168.89.120:3000/contact?id=${id}`, {headers:{Authorization:`Bearer ${token}`}});
       console.log('Contact deleted successfully', response.data);
       navigation.goBack();
     } catch (error) {
@@ -166,7 +166,7 @@ const ContactScreen = ({route}: {route: DetailsScreenRouteProp}) => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate('mapOptions', {item})}
+        onPress={() => navigation.navigate('MapOptions', {item})}
         style={[styles.image, { backgroundColor: '#f0f0f0', borderRadius: 10, padding: 10, alignItems: 'center' }]}>
         <MaterialCommunityIcons name='map-marker-plus' size={60} color={'#4A90E2'}/>
         <Text style={styles.mapText}>Add/Edit Location</Text>

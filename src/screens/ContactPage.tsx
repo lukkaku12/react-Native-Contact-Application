@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { RootStackParamList } from '../types/navigation.types';
+import { RootStackParamList, TabNavigatorTypes } from '../types/navigation.types';
 import { RouteProp, useIsFocused, useNavigation } from '@react-navigation/native';
 import {
   launchCamera,
@@ -21,17 +21,10 @@ import {
 } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
-type ContactPageRouteProp = RouteProp<RootStackParamList, 'config'>;
 
-type ContactPageProps = {
-  route: ContactPageRouteProp;
-};
-
-const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
-  const { item } = route.params;
+const ContactPage = () => {
 
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -103,7 +96,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ route }) => {
   useEffect(() => {
     const getData = async () => {
       const email = await AsyncStorage.getItem('emailUser');
-      const response = await axios.get(`http://192.168.1.9:3000/users?email=${email}`);
+      const response = await axios.get(`http://192.168.89.120:3000/users?email=${email}`);
       setName(response.data.name);
       setPhoneNumber(response.data.phoneNumber);
     };

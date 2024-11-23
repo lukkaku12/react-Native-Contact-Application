@@ -81,7 +81,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeScreenNavigationProp }) =>
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Contactos</Text>
-        <TouchableOpacity style={styles.addIcon} onPress={() => navigation.navigate('newContact')}>
+        <TouchableOpacity style={styles.addIcon} onPress={() => navigation.navigate('NewContact')}>
           <AntDesign name="form" color={'#555'} size={24} />
         </TouchableOpacity>
       </View>

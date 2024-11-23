@@ -8,7 +8,7 @@ import { RootStackParamList } from '../types/navigation.types';
 
 type CreateContactScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'newContact'
+  'NewContact'
 >;
 
 const storeData = async (newContact: {
@@ -22,7 +22,7 @@ const storeData = async (newContact: {
     
     const token = await AsyncStorage.getItem('token'); // Reemplaza con tu token real
     const response = await axios.post(
-      'http://192.168.89.189:3000/contact',
+      'http://192.168.89.120:3000/contact',
       newContact, // Este es el cuerpo de la solicitud (los datos que se envían)
       {
         headers: {
@@ -53,7 +53,7 @@ const CreateContact = () => {
       name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
-      picture_uri: 'asda', // O puedes dejarlo vacío si no es obligatorio
+      picture_uri: '', // O puedes dejarlo vacío si no es obligatorio
       user_id: parseInt(idUser), // Este es el id del usuario al que pertenece el contacto (reemplaza con tu id real)
     };
     

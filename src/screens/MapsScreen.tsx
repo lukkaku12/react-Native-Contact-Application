@@ -8,7 +8,7 @@ import { OPENWEATHER_API_KEY } from '@env';
 import DetailPopup from '../components/DetailPopup';
 import { RootStackParamList } from '../types/navigation.types';
 
-type MapsScreenProp = RouteProp<RootStackParamList, 'mapOptions'>;
+type MapsScreenProp = RouteProp<RootStackParamList, 'MapOptions'>;
 
 interface WeatherData {
   name: string;

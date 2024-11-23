@@ -8,7 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type LogInRegisterViewNavigationProp = NativeStackNavigationProp<RootStackParamList, 'RegisterLogin'>;
 
 type LogInRegisterViewProps = {
-  navigation: LogInRegisterViewNavigationProp; 
+  navigation: LogInRegisterViewNavigationProp;
 };
 
 const LogInRegisterView = ({ navigation }: LogInRegisterViewProps) => {
@@ -16,6 +16,17 @@ const LogInRegisterView = ({ navigation }: LogInRegisterViewProps) => {
 
   return (
     <View style={styles.container}>
+      {/* Título y Descripción arriba del formulario */}
+      <Text style={styles.title}>
+        {toggleForm ? 'Log In' : 'Register'}
+      </Text>
+      <Text style={styles.description}>
+        {toggleForm
+          ? 'Please enter your credentials to log into your account.'
+          : 'Fill in the details to create a new account.'}
+      </Text>
+
+      {/* Formulario de Login o Register */}
       {toggleForm ? (
         <>
           <LoginForm navigation={navigation} />
@@ -46,6 +57,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginLeft: 10,
+    marginTop: 100,
+    color: '#333',
+    alignSelf: 'flex-start'
+  },
+  description: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    marginLeft: 10,
+    alignSelf: 'flex-start'
+
   },
   text: {
     marginTop: 20,

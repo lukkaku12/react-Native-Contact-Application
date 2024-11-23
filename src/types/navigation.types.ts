@@ -6,13 +6,16 @@ export type RootStackParamList = {
     HomeStack: undefined; 
     HomeTab: undefined;
     Details: { item: { id: number; name: string; last_name: string; phone_number: string; picture_uri: string} };
-    mapOptions: { item: { id: number; name: string; last_name: string; phone_number: string; picture_uri: string} };
-    newContact: undefined;
-    config: {
-      item: {
-        id: number; name: string; last_name: string; phone_number: string; picture_uri: string
-      };
-    };
+    MapOptions: { item: { id: number; name: string; last_name: string; phone_number: string; picture_uri: string} };
+    NewContact: undefined;
+    Config: undefined;
+    Onboarding: undefined;
+    Main: undefined;
     
     
   };
+
+  export type TabNavigatorTypes = {
+    HomeTab: undefined;
+    Config: undefined;
+  }
