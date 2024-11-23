@@ -55,8 +55,8 @@ export const StackNavigator = () => {
   useEffect(() => {
     const checkAsyncStorage = async () => {
       try {
-        const firstLaunch = await AsyncStorage.getItem('firstLaunch');
-        const authenticated = await AsyncStorage.getItem('isAuthenticated');
+        const firstLaunch = await AsyncStorage.getItem('onBoardingComplete');
+        const authenticated = await AsyncStorage.getItem('isLoggedIn');
 
         setIsFirstLaunch(firstLaunch === null ? true : false); // Si es la primera vez, lo marcará como `true`
         setIsAuthenticated(authenticated === 'true'); // Verifica si el usuario está autenticado
